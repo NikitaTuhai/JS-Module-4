@@ -6,21 +6,19 @@ function Cashier(name, productDatabase) {
   this.customerMoney = 0;
 
   this.getCustomerMoney = function(value) {
-    this.customerMoney = value;
-    return console.log(`Ваши :${value}`);
+    return (this.customerMoney = value);
   };
 
   this.countTotalPrice = function(order) {
-    let sum = 0;
+    let totalPrices = [];
 
     for (let key in order) {
-      for (let item in this.productDatabase) {
-        if (item === key) {
-          sum += this.productDatabase[item] * order[key];
-        }
-      }
+      totalPrices.push(order[key] * this.productDatabase[key]);
     }
-    return sum;
+
+    const reducer = (prev, next) => prev + next;
+
+    return totalPrices.reduce(reducer);
   };
 
   this.countChange = function(totalPrice) {
@@ -35,16 +33,16 @@ function Cashier(name, productDatabase) {
   };
 
   this.onSuccess = function(change) {
-    return console.log(`Спасибо за покупку,ваша сдача: ${change}`);
+    return;
   };
 
   this.onError = function() {
-    return console.log("Очень жаль, вам не хватает денег на покупки");
+    return;
   };
 
   this.reset = function() {
     this.customerMoney = 0;
-    return this.customerMoney;
+    return;
   };
 }
 
@@ -56,8 +54,6 @@ const products = {
   cheese: 40
 };
 
-const mango = new Cashier("Mango", products);
-
 const order = {
   bread: 2,
   milk: 3,
@@ -65,19 +61,23 @@ const order = {
   cheese: 2
 };
 
+const mango = new Cashier("Mango", products);
+
+
+console.log(mango.name);
+console.log(mango.productDatabase);
+console.log(mango.customerMoney);
+
 const totalPrice = mango.countTotalPrice(order);
-console.log(`Сумма покупки : ${totalPrice}`);
+console.log(totalPrice);
 
 mango.getCustomerMoney(800);
+console.log(mango.customerMoney)
 
 const change = mango.countChange(totalPrice);
+console.log(change)
 
-if (change !== null) {
-  mango.onSuccess(change);
-} else {
-  mango.onError();
-}
+change !== null ? mango.onSuccess(change) : mango.onError();
 
 mango.reset();
-
 console.log(mango.customerMoney);
