@@ -11,10 +11,11 @@ function Cashier(name, productDatabase) {
 
   this.countTotalPrice = function(order) {
   
-    return Object.keys(order).reduce((prev, next) => {
-      return prev + order[next] * this.productDatabase[next];
-    }, 0);
-
+     let totalPrice = 0;
+    for (const key in order) {
+      totalPrice += this.productDatabase[key] * order[key];
+    }
+    return totalPrice;
   };
 
   this.countChange = function(totalPrice) {
